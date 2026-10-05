@@ -1,0 +1,1205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="images/RK.png" type="image/x-icon" />
+    <title>RK FRAMES - Framed Art, Made in Your Style</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="#" class="brand">RK FRAMES</a>
+      <div class="nav-links">
+        <a href="#shop">Shop</a>
+        <a href="#custom">Upload Your Photo</a>
+        <button id="cart-toggle" class="cart-btn">
+          🛒 Cart
+          <span id="cart-count">0</span>
+        </button>
+      </div>
+    </nav>
+    <section class="hero">
+      <h1>Framed Art, Made in Your Style</h1>
+      <p>
+        Browse our designs, or upload your own photo and see it in a frame
+        instantly.
+      </p>
+      <div class="hero-actions">
+        <a href="#shop" class="btn">Browse Designs</a>
+        <a href="#custom" class="btn btn-outline">Upload Your Photo</a>
+      </div>
+    </section>
+    <section id="shop" class="shop-section">
+      <div class="categories">
+        <button class="category-btn active" data-category="all">All</button>
+        <button class="category-btn" data-category="Gaming-Zone">
+          Gaming Zone
+        </button>
+        <button class="category-btn" data-category="Football">Football</button>
+
+        <button class="category-btn" data-category="Music-&Vibes">
+          Music & Vibes
+        </button>
+        <button class="category-btn" data-category="Netflix">Netflix</button>
+        <button class="category-btn" data-category="Movies">Movies</button>
+        <button class="category-btn" data-category="Character">
+          Character
+        </button>
+        <button class="category-btn" data-category="Custom-Kit">
+          Custom Kit
+        </button>
+        <button class="category-btn" data-category="Codeing">Codeing</button>
+        <button class="category-btn" data-category="Nature">Nature</button>
+        <button class="category-btn" data-category="Cars">Cars</button>
+        <button class="category-btn" data-category="Anime-Universe">
+          Anime Universe
+        </button>
+        <button class="category-btn" data-category="Motivation-Quotes">
+          Motivation & Quotes
+        </button>
+        <button class="category-btn" data-category="Custom-Design">
+          Custom Design
+        </button>
+      </div>
+      <div class="product-grid" id="productGrid">
+        <div
+          class="product-card"
+          data-id="frame-001"
+          data-category="Gaming-Zone"
+          data-name="Arthur Morgan Poster"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/Arthur Morgan Poster.jpg"
+                alt="Arthur Morgan Poster"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>Arthur Morgan Poster</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+        <div
+          class="product-card"
+          data-id="frame-002"
+          data-category="Football"
+          data-name="Lionel Messi Poster — 01"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/Messi-1.jpg"
+                alt="Messi Poster - 1 Frame"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>Lionel Messi Poster — 01</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+
+        <div
+          class="product-card"
+          data-id="frame-003"
+          data-category="Football"
+          data-name="Lionel Messi Poster — 02"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/Messi-2.jpg"
+                alt="Lionel Messi Poster — 02"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>Lionel Messi Poster — 02</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+
+        <div
+          class="product-card"
+          data-id="frame-004"
+          data-category="Football"
+          data-name="Lionel Messi Poster — 03"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/Messi-3.jpg"
+                alt="Lionel Messi Poster — 03"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>Lionel Messi Poster — 03</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+
+        <div
+          class="product-card"
+          data-id="frame-005"
+          data-category="Football"
+          data-name="Lionel Messi Poster — 04"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/Messi-4.jpg"
+                alt="Lionel Messi Poster — 04"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>Lionel Messi Poster — 04</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+
+        <div
+          class="product-card"
+          data-id="frame-006"
+          data-category="Football"
+          data-name="Cristiano Ronaldo Poster — 01"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/cristianoRonaldo-1.jpg"
+                alt="Cristiano Ronaldo Poster — 01"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>Cristiano Ronaldo Poster — 01</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+        <div
+          class="product-card"
+          data-id="frame-007"
+          data-category="Football"
+          data-name="Cristiano Ronaldo Poster — 02"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/cristianoRonaldo-2.jpg"
+                alt="Cristiano Ronaldo Poster — 02"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>Cristiano Ronaldo Poster — 02</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+        <div
+          class="product-card"
+          data-id="frame-008"
+          data-category="Football"
+          data-name="Cristiano Ronaldo Poster — 03"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/cristianoRonaldo-3.jpg"
+                alt="Cristiano Ronaldo Poster — 03"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>Cristiano Ronaldo Poster — 03</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+        <div
+          class="product-card"
+          data-id="frame-009"
+          data-category="Football"
+          data-name="Cristiano Ronaldo Poster — 04"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/cristianoRonaldo-4.jpg"
+                alt="Cristiano Ronaldo Poster — 04"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>Cristiano Ronaldo Poster — 04</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+        <div
+          class="product-card"
+          data-id="frame-010"
+          data-category="Football"
+          data-name="Cristiano Ronaldo Poster — 05"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/cristianoRonaldo-5.jpg"
+                alt="Cristiano Ronaldo Poster — 05"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>Cristiano Ronaldo Poster — 05</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+        <div
+          class="product-card"
+          data-id="frame-011"
+          data-category="Gaming-Zone"
+          data-name="Resident Evil 4 Remake Poster"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/RESIDENT EVIL 4 REMAKE.jpg"
+                alt="RESIDENT EVIL 4 REMAKE - 1 Frame"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>Resident Evil 4 Remake Poster</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+        <div
+          class="product-card"
+          data-id="frame-012"
+          data-category="Football"
+          data-name="FC Barcelona Poster — 01"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/FCB-1.jpg"
+                alt="FC Barcelona Poster — 01"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>FC Barcelona Poster — 01</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+        <div
+          class="product-card"
+          data-id="frame-013"
+          data-category="Music-&Vibes"
+          data-name="Eminem Poster — 01"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/eminem poster-1.jpg"
+                alt="Eminem Poster — 01"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>Eminem Poster — 01</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+        <div
+          class="product-card"
+          data-id="frame-014"
+          data-category="Music-&Vibes"
+          data-name="Arctic Monkeys Poster — 01"
+          data-price="350"
+        >
+          <div class="product-image-wrap">
+            <div class="frame">
+              <img
+                src="images/Arctic Monkeys -1.jpg"
+                alt="Arctic Monkeys Poster — 01"
+                class="poster"
+              />
+            </div>
+          </div>
+
+          <h3>Arctic Monkeys Poster — 01</h3>
+          <p class="product-price">350 LE</p>
+
+          <div class="product-options">
+            <div class="product-option-group">
+              <label for="size">Size</label>
+              <select class="product-size" aria-label="Frame size">
+                <option value="20×30cm" data-price="350">20×30cm</option>
+                <option value="30×40cm" data-price="450">30×40cm</option>
+                <option value="40×60cm" data-price="600">40×60cm</option>
+              </select>
+            </div>
+
+            <div class="product-option-group">
+              <label>Frame Color</label>
+              <div class="product-color-options">
+                <button
+                  type="button"
+                  class="product-color active"
+                  data-color="Black Wood"
+                  aria-label="Black Wood"
+                  title="Black Wood"
+                >
+                  <span style="background: #1a1a1a"></span>
+                </button>
+                <button
+                  type="button"
+                  class="product-color"
+                  data-color="Classic White"
+                  aria-label="Classic White"
+                  title="Classic White"
+                >
+                  <span style="background: #ffffff"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-small add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+    </section>
+    <section id="custom" class="custom-frame-page">
+      <h1>Frame Your Own Photo</h1>
+      <p class="muted">
+        Upload a photo, pick a size and frame style, and preview it instantly.
+      </p>
+      <div class="frame-uploader">
+        <div class="frame-uploader-canvas">
+          <canvas id="previewCanvas"></canvas>
+        </div>
+        <div class="frame-uploader-controls">
+          <label class="upload-btn">
+            Upload Your Photo
+            <input type="file" id="photoInput" accept="image/*" hidden />
+          </label>
+          <div class="control-group">
+            <p class="control-label">Frame Size</p>
+            <div class="size-options" id="sizeOptions">
+              <button class="size-btn active" data-w="20" data-h="30">
+                20×30cm
+              </button>
+              <button class="size-btn" data-w="30" data-h="40">30×40cm</button>
+              <button class="size-btn" data-w="40" data-h="60">40×60cm</button>
+            </div>
+          </div>
+          <div class="control-group">
+            <p class="control-label">Frame Style</p>
+            <div class="swatches" id="swatches">
+              <button
+                class="swatch active"
+                style="background: #1a1a1a"
+                data-color="#1a1a1a"
+                data-mat="#f5f2ea"
+                title="Black Wood"
+              ></button>
+              <button
+                class="swatch"
+                style="background: #ffffff; border: 2px solid #ccc"
+                data-color="#ffffff"
+                data-mat="#ffffff"
+                title="Classic White"
+              ></button>
+            </div>
+          </div>
+          <div class="control-group">
+            <label style="display: none">
+              Frame thickness
+              <input
+                type="range"
+                id="frameWidthRange"
+                min="16"
+                max="60"
+                value="36"
+              />
+            </label>
+          </div>
+          <div class="control-group">
+            <label style="display: none">
+              Mat width
+              <input
+                type="range"
+                id="matWidthRange"
+                min="0"
+                max="60"
+                value="28"
+              />
+            </label>
+          </div>
+          <button class="btn" id="downloadBtn" disabled>
+            Download Preview
+          </button>
+          <button class="btn" id="custom-add-to-cart-btn" disabled>
+            Make an Order
+          </button>
+          <p class="muted small">
+            This preview is generated live in your browser — nothing is uploaded
+            anywhere.
+          </p>
+        </div>
+      </div>
+    </section>
+    <footer class="footer">© <span id="year"></span> RK Frames</footer>
+
+    <!-- PRODUCT OPTIONS MODAL -->
+    <div id="product-options-modal" class="rk-overlay">
+      <div class="rk-popup product-options-popup">
+        <button
+          type="button"
+          id="close-product-options"
+          class="rk-popup-close"
+          aria-label="Close"
+        >
+          &times;
+        </button>
+
+        <h2 id="product-options-title">Choose Your Frame</h2>
+
+        <div class="product-options-preview">
+          <img id="product-options-image" src="" alt="" />
+        </div>
+
+        <div class="product-option-group">
+          <label for="modal-product-size">Frame Size</label>
+          <select id="modal-product-size">
+            <option value="20×30cm" data-price="350">20×30cm</option>
+            <option value="30×40cm" data-price="450">30×40cm</option>
+            <option value="40×60cm" data-price="600">40×60cm</option>
+          </select>
+        </div>
+
+        <div class="product-option-group">
+          <label>Frame Color</label>
+          <div id="modal-product-colors" class="product-color-options">
+            <button
+              type="button"
+              class="product-color active"
+              data-color="Black Wood"
+              aria-label="Black Wood"
+              title="Black Wood"
+            >
+              <span style="background: #1a1a1a"></span>
+            </button>
+            <button
+              type="button"
+              class="product-color"
+              data-color="Classic White"
+              aria-label="Classic White"
+              title="Classic White"
+            >
+              <span style="background: #ffffff"></span>
+            </button>
+          </div>
+        </div>
+
+        <p class="selected-product-price">
+          Price: <strong id="modal-product-price">350 LE</strong>
+        </p>
+
+        <button type="button" id="confirm-product-options" class="btn">
+          Add to Cart
+        </button>
+      </div>
+    </div>
+
+    <!-- SHOPPING CART -->
+    <div id="cart-modal" class="cart-modal">
+      <div class="cart-content">
+        <button id="close-cart" class="close-cart" aria-label="Close cart">
+          &times;
+        </button>
+
+        <h2>Your Shopping Cart</h2>
+
+        <div id="cart-items"></div>
+
+        <div class="cart-summary">
+          <p>
+            Subtotal:
+            <span id="cart-subtotal">0 LE</span>
+          </p>
+          <h3>
+            Total:
+            <span id="cart-total">0 LE</span>
+          </h3>
+          <p class="muted small">Delivery fees are not included.</p>
+        </div>
+
+        <button id="checkout-btn" class="btn">Proceed to Checkout</button>
+      </div>
+    </div>
+
+    <!-- CHECKOUT -->
+    <div id="checkout-modal" class="checkout-modal">
+      <div class="checkout-content">
+        <button
+          id="close-checkout"
+          class="close-cart"
+          aria-label="Close checkout"
+        >
+          &times;
+        </button>
+
+        <h2>Complete Your Order</h2>
+
+        <div id="checkout-items" class="checkout-items"></div>
+
+        <div class="checkout-total">
+          <strong>Order Total:</strong>
+          <strong id="checkout-total">0 LE</strong>
+        </div>
+
+        <form id="checkout-form">
+          <label for="customer-name">Full Name *</label>
+          <input
+            type="text"
+            id="customer-name"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            required
+          />
+
+          <label for="customer-phone">Phone Number *</label>
+          <input
+            type="tel"
+            id="customer-phone"
+            placeholder="01XXXXXXXXX"
+            autocomplete="tel"
+            required
+          />
+
+          <label for="customer-address">Delivery Address *</label>
+          <textarea
+            id="customer-address"
+            placeholder="City, area, street, building and apartment"
+            autocomplete="street-address"
+          ></textarea>
+
+          <label for="customer-notes">Order Notes (Optional)</label>
+          <textarea
+            id="customer-notes"
+            placeholder="Special requests, custom names, numbers, etc."
+          ></textarea>
+
+          <p class="checkout-notice">
+            Your order details will be sent directly to RK Frames by email.
+            After the order is received, you'll see a confirmation message here.
+          </p>
+
+          <button type="submit" id="place-order-btn" class="btn">
+            Place Order
+          </button>
+
+          <button type="button" id="back-to-cart" class="btn btn-outline">
+            Back to Cart
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- GENERAL MESSAGE POPUP -->
+    <div id="rk-message-modal" class="rk-overlay">
+      <div class="rk-popup rk-message-popup">
+        <button
+          type="button"
+          id="close-rk-message"
+          class="rk-popup-close"
+          aria-label="Close"
+        >
+          &times;
+        </button>
+        <div class="warning-icon">!</div>
+        <h2 id="rk-message-title">Notice</h2>
+        <p id="rk-message-text"></p>
+        <button type="button" id="rk-message-ok" class="btn">OK</button>
+      </div>
+    </div>
+
+    <!-- SIZE WARNING POPUP -->
+    <div id="size-warning-modal" class="rk-overlay">
+      <div class="rk-popup size-warning-popup">
+        <button
+          type="button"
+          id="close-size-warning"
+          class="rk-popup-close"
+          aria-label="Close"
+        >
+          &times;
+        </button>
+        <div class="warning-icon">!</div>
+        <h2>Size Notice</h2>
+        <p id="size-warning-text"></p>
+        <div class="size-warning-actions">
+          <button type="button" id="use-recommended-size" class="btn">
+            Use Recommended Size
+          </button>
+          <button type="button" id="keep-selected-size" class="btn btn-outline">
+            Keep Selected Size
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDER SUCCESS POPUP -->
+    <div id="order-success-modal" class="rk-overlay">
+      <div class="rk-popup order-success-popup">
+        <div class="success-check">
+          <svg viewBox="0 0 52 52" aria-hidden="true">
+            <circle cx="26" cy="26" r="24"></circle>
+            <path d="M14 27l8 8 16-18"></path>
+          </svg>
+        </div>
+        <h2>Order Done!</h2>
+        <p class="success-main">Your order has been received successfully.</p>
+        <p class="success-sub">Please wait for confirmation from RK Frames.</p>
+        <div class="success-loader"><span></span></div>
+        <button type="button" id="close-order-success" class="btn">Done</button>
+      </div>
+    </div>
+    <!-- Meta Pixel Code -->
+    <script>
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js",
+      );
+      fbq("init", "3201739173360046");
+      fbq("track", "PageView");
+    </script>
+    <noscript
+      ><img
+        height="1"
+        width="1"
+        style="display: none"
+        src="https://www.facebook.com/tr?id=3201739173360046&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+    <script src="script.js"></script>
+  </body>
+</html>
