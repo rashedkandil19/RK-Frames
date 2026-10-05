@@ -1,1213 +1,888 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="images/RK.png" type="image/x-icon" />
-    <meta
-      name="description"
-      content="Shop premium posters and framed wall art in Egypt at RK Frames. Discover football, gaming, and iconic posters in multiple sizes and frame colors, with custom frame options available."
-    />
-    <meta
-      name="keywords"
-      content="RK Frames, posters Egypt, framed posters Egypt, wall art Egypt, posters Cairo, football posters, Messi poster, Ronaldo poster, gaming posters, Arthur Morgan poster, Resident Evil 4 poster, Barcelona poster, custom frames Egypt, custom posters Egypt, wall decor Egypt, framed wall art, room decor Egypt"
-    />
-    <title>RK FRAMES - Framed Art, Made in Your Style</title>
-    <link rel="stylesheet" href="style.css" />
-    <!-- Meta Pixel Code -->
-    <script>
-      !(function (f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function () {
-          n.callMethod
-            ? n.callMethod.apply(n, arguments)
-            : n.queue.push(arguments);
+(function () {
+  "use strict";
+
+  function initRKFrames() {
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const categoryButtons = document.querySelectorAll(".category-btn");
+    const productCards = document.querySelectorAll(".product-card");
+
+    categoryButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        categoryButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        const category = btn.dataset.category;
+
+        productCards.forEach((card) => {
+          const show = category === "all" || card.dataset.category === category;
+          card.style.display = show ? "" : "none";
+        });
+      });
+    });
+    const FRAME_SIZES = [
+      { w: 20, h: 30, label: "20×30cm" },
+      { w: 30, h: 40, label: "30×40cm" },
+      { w: 40, h: 60, label: "40×60cm" },
+    ];
+    const PX_PER_CM = 12; // canvas scale factor
+
+    let selectedSize = FRAME_SIZES[0];
+    let selectedColor = "#1a1a1a";
+    let selectedMat = "#f5f2ea";
+    let frameWidth = 10;
+    let matWidth = 10;
+    let uploadedImage = null; // HTMLImageElement
+
+    const canvas = document.getElementById("previewCanvas");
+    const ctx = canvas.getContext("2d");
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    document.querySelectorAll(".size-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document
+          .querySelectorAll(".size-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedSize = { w: Number(btn.dataset.w), h: Number(btn.dataset.h) };
+        checkSizeFit();
+        drawPreview();
+      });
+    });
+
+    document.querySelectorAll(".swatch").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document
+          .querySelectorAll(".swatch")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedColor = btn.dataset.color;
+        selectedMat = btn.dataset.mat;
+        drawPreview();
+      });
+    });
+
+    document
+      .getElementById("frameWidthRange")
+      .addEventListener("input", (e) => {
+        frameWidth = Number(e.target.value);
+        drawPreview();
+      });
+    document.getElementById("matWidthRange").addEventListener("input", (e) => {
+      matWidth = Number(e.target.value);
+      drawPreview();
+    });
+
+    /* ---------------- PHOTO UPLOAD + SIZE-FIT CHECK ---------------- */
+    document.getElementById("photoInput").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          uploadedImage = img;
+          checkSizeFit();
+          drawPreview();
+          downloadBtn.disabled = false;
+          const customOrderBtn = document.getElementById("custom-add-to-cart-btn");
+          if (customOrderBtn) customOrderBtn.disabled = false;
         };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = "2.0";
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s);
-      })(
-        window,
-        document,
-        "script",
-        "https://connect.facebook.net/en_US/fbevents.js",
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+    function checkSizeFit() {
+      if (!uploadedImage) return;
+
+      // Normalize to a "short side / long side" ratio so orientation doesn't matter.
+      const imgRatio =
+        Math.min(uploadedImage.width, uploadedImage.height) /
+        Math.max(uploadedImage.width, uploadedImage.height);
+
+      let bestDiff = Infinity;
+      let bestSizes = [];
+      FRAME_SIZES.forEach((size) => {
+        const sizeRatio = Math.min(size.w, size.h) / Math.max(size.w, size.h);
+        const diff = Math.abs(sizeRatio - imgRatio);
+        if (diff < bestDiff - 0.001) {
+          bestDiff = diff;
+          bestSizes = [size];
+        } else if (Math.abs(diff - bestDiff) <= 0.001) {
+          bestSizes.push(size);
+        }
+      });
+
+      const selectedRatio =
+        Math.min(selectedSize.w, selectedSize.h) /
+        Math.max(selectedSize.w, selectedSize.h);
+      const selectedDiff = Math.abs(selectedRatio - imgRatio);
+
+      const THRESHOLD = 0.06; // tweak sensitivity here
+      const alreadyBest = bestSizes.some(
+        (s) => s.w === selectedSize.w && s.h === selectedSize.h,
       );
-      fbq("init", "3201739173360046");
-      fbq("track", "PageView");
-    </script>
-    <noscript
-      ><img
-        height="1"
-        width="1"
-        style="display: none"
-        src="https://www.facebook.com/tr?id=3201739173360046&ev=PageView&noscript=1"
-    /></noscript>
-    <!-- End Meta Pixel Code -->
-  </head>
-  <body>
-    <nav class="navbar">
-      <a href="#" class="brand">RK FRAMES</a>
-      <div class="nav-links">
-        <a href="#shop">Shop</a>
-        <a href="#custom">Upload Your Photo</a>
-        <button id="cart-toggle" class="cart-btn">
-          🛒 Cart
-          <span id="cart-count">0</span>
-        </button>
-      </div>
-    </nav>
-    <section class="hero">
-      <h1>Framed Art, Made in Your Style</h1>
-      <p>
-        Browse our designs, or upload your own photo and see it in a frame
-        instantly.
-      </p>
-      <div class="hero-actions">
-        <a href="#shop" class="btn">Browse Designs</a>
-        <a href="#custom" class="btn btn-outline">Upload Your Photo</a>
-      </div>
-    </section>
-    <section id="shop" class="shop-section">
-      <div class="categories">
-        <button class="category-btn active" data-category="all">All</button>
-        <button class="category-btn" data-category="Gaming-Zone">
-          Gaming Zone
-        </button>
-        <button class="category-btn" data-category="Football">Football</button>
-
-        <button class="category-btn" data-category="Music-&Vibes">
-          Music & Vibes
-        </button>
-        <button class="category-btn" data-category="Netflix">Netflix</button>
-        <button class="category-btn" data-category="Movies">Movies</button>
-        <button class="category-btn" data-category="Character">
-          Character
-        </button>
-        <button class="category-btn" data-category="Custom-Kit">
-          Custom Kit
-        </button>
-        <button class="category-btn" data-category="Codeing">Codeing</button>
-        <button class="category-btn" data-category="Nature">Nature</button>
-        <button class="category-btn" data-category="Cars">Cars</button>
-        <button class="category-btn" data-category="Anime-Universe">
-          Anime Universe
-        </button>
-        <button class="category-btn" data-category="Motivation-Quotes">
-          Motivation & Quotes
-        </button>
-        <button class="category-btn" data-category="Custom-Design">
-          Custom Design
-        </button>
-      </div>
-      <div class="product-grid" id="productGrid">
-        <div
-          class="product-card"
-          data-id="frame-001"
-          data-category="Gaming-Zone"
-          data-name="Arthur Morgan Poster"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/Arthur Morgan Poster.jpg"
-                alt="Arthur Morgan Poster"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>Arthur Morgan Poster</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-        <div
-          class="product-card"
-          data-id="frame-002"
-          data-category="Football"
-          data-name="Lionel Messi Poster — 01"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/Messi-1.jpg"
-                alt="Messi Poster - 1 Frame"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>Lionel Messi Poster — 01</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-
-        <div
-          class="product-card"
-          data-id="frame-003"
-          data-category="Football"
-          data-name="Lionel Messi Poster — 02"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/Messi-2.jpg"
-                alt="Lionel Messi Poster — 02"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>Lionel Messi Poster — 02</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-
-        <div
-          class="product-card"
-          data-id="frame-004"
-          data-category="Football"
-          data-name="Lionel Messi Poster — 03"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/Messi-3.jpg"
-                alt="Lionel Messi Poster — 03"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>Lionel Messi Poster — 03</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-
-        <div
-          class="product-card"
-          data-id="frame-005"
-          data-category="Football"
-          data-name="Lionel Messi Poster — 04"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/Messi-4.jpg"
-                alt="Lionel Messi Poster — 04"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>Lionel Messi Poster — 04</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-
-        <div
-          class="product-card"
-          data-id="frame-006"
-          data-category="Football"
-          data-name="Cristiano Ronaldo Poster — 01"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/cristianoRonaldo-1.jpg"
-                alt="Cristiano Ronaldo Poster — 01"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>Cristiano Ronaldo Poster — 01</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-        <div
-          class="product-card"
-          data-id="frame-007"
-          data-category="Football"
-          data-name="Cristiano Ronaldo Poster — 02"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/cristianoRonaldo-2.jpg"
-                alt="Cristiano Ronaldo Poster — 02"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>Cristiano Ronaldo Poster — 02</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-        <div
-          class="product-card"
-          data-id="frame-008"
-          data-category="Football"
-          data-name="Cristiano Ronaldo Poster — 03"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/cristianoRonaldo-3.jpg"
-                alt="Cristiano Ronaldo Poster — 03"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>Cristiano Ronaldo Poster — 03</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-        <div
-          class="product-card"
-          data-id="frame-009"
-          data-category="Football"
-          data-name="Cristiano Ronaldo Poster — 04"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/cristianoRonaldo-4.jpg"
-                alt="Cristiano Ronaldo Poster — 04"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>Cristiano Ronaldo Poster — 04</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-        <div
-          class="product-card"
-          data-id="frame-010"
-          data-category="Football"
-          data-name="Cristiano Ronaldo Poster — 05"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/cristianoRonaldo-5.jpg"
-                alt="Cristiano Ronaldo Poster — 05"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>Cristiano Ronaldo Poster — 05</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-        <div
-          class="product-card"
-          data-id="frame-011"
-          data-category="Gaming-Zone"
-          data-name="Resident Evil 4 Remake Poster"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/RESIDENT EVIL 4 REMAKE.jpg"
-                alt="RESIDENT EVIL 4 REMAKE - 1 Frame"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>Resident Evil 4 Remake Poster</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-        <div
-          class="product-card"
-          data-id="frame-012"
-          data-category="Football"
-          data-name="FC Barcelona Poster — 01"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/FCB-1.jpg"
-                alt="FC Barcelona Poster — 01"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>FC Barcelona Poster — 01</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-        <div
-          class="product-card"
-          data-id="frame-013"
-          data-category="Music-&Vibes"
-          data-name="Eminem Poster — 01"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/eminem poster-1.jpg"
-                alt="Eminem Poster — 01"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>Eminem Poster — 01</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-        <div
-          class="product-card"
-          data-id="frame-014"
-          data-category="Music-&Vibes"
-          data-name="Arctic Monkeys Poster — 01"
-          data-price="350"
-        >
-          <div class="product-image-wrap">
-            <div class="frame">
-              <img
-                src="images/Arctic Monkeys -1.jpg"
-                alt="Arctic Monkeys Poster — 01"
-                class="poster"
-              />
-            </div>
-          </div>
-
-          <h3>Arctic Monkeys Poster — 01</h3>
-          <p class="product-price">350 LE</p>
-
-          <div class="product-options">
-            <div class="product-option-group">
-              <label for="size">Size</label>
-              <select class="product-size" aria-label="Frame size">
-                <option value="20×30cm" data-price="350">20×30cm</option>
-                <option value="30×40cm" data-price="450">30×40cm</option>
-                <option value="40×60cm" data-price="600">40×60cm</option>
-              </select>
-            </div>
-
-            <div class="product-option-group">
-              <label>Frame Color</label>
-              <div class="product-color-options">
-                <button
-                  type="button"
-                  class="product-color active"
-                  data-color="Black Wood"
-                  aria-label="Black Wood"
-                  title="Black Wood"
-                >
-                  <span style="background: #1a1a1a"></span>
-                </button>
-                <button
-                  type="button"
-                  class="product-color"
-                  data-color="Classic White"
-                  aria-label="Classic White"
-                  title="Classic White"
-                >
-                  <span style="background: #ffffff"></span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn btn-small add-to-cart">Add to Cart</button>
-        </div>
-      </div>
-    </section>
-    <section id="custom" class="custom-frame-page">
-      <h1>Frame Your Own Photo</h1>
-      <p class="muted">
-        Upload a photo, pick a size and frame style, and preview it instantly.
-      </p>
-      <div class="frame-uploader">
-        <div class="frame-uploader-canvas">
-          <canvas id="previewCanvas"></canvas>
-        </div>
-        <div class="frame-uploader-controls">
-          <label class="upload-btn">
-            Upload Your Photo
-            <input type="file" id="photoInput" accept="image/*" hidden />
-          </label>
-          <div class="control-group">
-            <p class="control-label">Frame Size</p>
-            <div class="size-options" id="sizeOptions">
-              <button class="size-btn active" data-w="20" data-h="30">
-                20×30cm
-              </button>
-              <button class="size-btn" data-w="30" data-h="40">30×40cm</button>
-              <button class="size-btn" data-w="40" data-h="60">40×60cm</button>
-            </div>
-          </div>
-          <div class="control-group">
-            <p class="control-label">Frame Style</p>
-            <div class="swatches" id="swatches">
-              <button
-                class="swatch active"
-                style="background: #1a1a1a"
-                data-color="#1a1a1a"
-                data-mat="#f5f2ea"
-                title="Black Wood"
-              ></button>
-              <button
-                class="swatch"
-                style="background: #ffffff; border: 2px solid #ccc"
-                data-color="#ffffff"
-                data-mat="#ffffff"
-                title="Classic White"
-              ></button>
-            </div>
-          </div>
-          <div class="control-group">
-            <label style="display: none">
-              Frame thickness
-              <input
-                type="range"
-                id="frameWidthRange"
-                min="16"
-                max="60"
-                value="36"
-              />
-            </label>
-          </div>
-          <div class="control-group">
-            <label style="display: none">
-              Mat width
-              <input
-                type="range"
-                id="matWidthRange"
-                min="0"
-                max="60"
-                value="28"
-              />
-            </label>
-          </div>
-          <button class="btn" id="downloadBtn" disabled>
-            Download Preview
-          </button>
-          <button class="btn" id="custom-add-to-cart-btn" disabled>
-            Make an Order
-          </button>
-          <p class="muted small">
-            This preview is generated live in your browser — nothing is uploaded
-            anywhere.
-          </p>
-        </div>
-      </div>
-    </section>
-    <footer class="footer">© <span id="year"></span> RK Frames</footer>
-
-    <!-- PRODUCT OPTIONS MODAL -->
-    <div id="product-options-modal" class="rk-overlay">
-      <div class="rk-popup product-options-popup">
-        <button
-          type="button"
-          id="close-product-options"
-          class="rk-popup-close"
-          aria-label="Close"
-        >
-          &times;
-        </button>
-
-        <h2 id="product-options-title">Choose Your Frame</h2>
-
-        <div class="product-options-preview">
-          <img id="product-options-image" src="" alt="" />
-        </div>
-
-        <div class="product-option-group">
-          <label for="modal-product-size">Frame Size</label>
-          <select id="modal-product-size">
-            <option value="20×30cm" data-price="350">20×30cm</option>
-            <option value="30×40cm" data-price="450">30×40cm</option>
-            <option value="40×60cm" data-price="600">40×60cm</option>
-          </select>
-        </div>
-
-        <div class="product-option-group">
-          <label>Frame Color</label>
-          <div id="modal-product-colors" class="product-color-options">
-            <button
-              type="button"
-              class="product-color active"
-              data-color="Black Wood"
-              aria-label="Black Wood"
-              title="Black Wood"
-            >
-              <span style="background: #1a1a1a"></span>
-            </button>
-            <button
-              type="button"
-              class="product-color"
-              data-color="Classic White"
-              aria-label="Classic White"
-              title="Classic White"
-            >
-              <span style="background: #ffffff"></span>
-            </button>
-          </div>
-        </div>
-
-        <p class="selected-product-price">
-          Price: <strong id="modal-product-price">350 LE</strong>
-        </p>
-
-        <button type="button" id="confirm-product-options" class="btn">
-          Add to Cart
-        </button>
-      </div>
-    </div>
-
-    <!-- SHOPPING CART -->
-    <div id="cart-modal" class="cart-modal">
-      <div class="cart-content">
-        <button id="close-cart" class="close-cart" aria-label="Close cart">
-          &times;
-        </button>
-
-        <h2>Your Shopping Cart</h2>
-
-        <div id="cart-items"></div>
-
-        <div class="cart-summary">
-          <p>
-            Subtotal:
-            <span id="cart-subtotal">0 LE</span>
-          </p>
-          <h3>
-            Total:
-            <span id="cart-total">0 LE</span>
-          </h3>
-          <p class="muted small">Delivery fees are not included.</p>
-        </div>
-
-        <button id="checkout-btn" class="btn">Proceed to Checkout</button>
-      </div>
-    </div>
-
-    <!-- CHECKOUT -->
-    <div id="checkout-modal" class="checkout-modal">
-      <div class="checkout-content">
-        <button
-          id="close-checkout"
-          class="close-cart"
-          aria-label="Close checkout"
-        >
-          &times;
-        </button>
-
-        <h2>Complete Your Order</h2>
-
-        <div id="checkout-items" class="checkout-items"></div>
-
-        <div class="checkout-total">
-          <strong>Order Total:</strong>
-          <strong id="checkout-total">0 LE</strong>
-        </div>
-
-        <form id="checkout-form">
-          <label for="customer-name">Full Name *</label>
-          <input
-            type="text"
-            id="customer-name"
-            placeholder="Enter your full name"
-            autocomplete="name"
-            required
-          />
-
-          <label for="customer-phone">Phone Number *</label>
-          <input
-            type="tel"
-            id="customer-phone"
-            placeholder="01XXXXXXXXX"
-            autocomplete="tel"
-            required
-          />
-
-          <label for="customer-address">Delivery Address *</label>
-          <textarea
-            id="customer-address"
-            placeholder="City, area, street, building and apartment"
-            autocomplete="street-address"
-          ></textarea>
-
-          <label for="customer-notes">Order Notes (Optional)</label>
-          <textarea
-            id="customer-notes"
-            placeholder="Special requests, custom names, numbers, etc."
-          ></textarea>
-
-          <p class="checkout-notice">
-            Your order details will be sent directly to RK Frames by email.
-            After the order is received, you'll see a confirmation message here.
-          </p>
-
-          <button type="submit" id="place-order-btn" class="btn">
-            Place Order
-          </button>
-
-          <button type="button" id="back-to-cart" class="btn btn-outline">
-            Back to Cart
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- GENERAL MESSAGE POPUP -->
-    <div id="rk-message-modal" class="rk-overlay">
-      <div class="rk-popup rk-message-popup">
-        <button
-          type="button"
-          id="close-rk-message"
-          class="rk-popup-close"
-          aria-label="Close"
-        >
-          &times;
-        </button>
-        <div class="warning-icon">!</div>
-        <h2 id="rk-message-title">Notice</h2>
-        <p id="rk-message-text"></p>
-        <button type="button" id="rk-message-ok" class="btn">OK</button>
-      </div>
-    </div>
-
-    <!-- SIZE WARNING POPUP -->
-    <div id="size-warning-modal" class="rk-overlay">
-      <div class="rk-popup size-warning-popup">
-        <button
-          type="button"
-          id="close-size-warning"
-          class="rk-popup-close"
-          aria-label="Close"
-        >
-          &times;
-        </button>
-        <div class="warning-icon">!</div>
-        <h2>Size Notice</h2>
-        <p id="size-warning-text"></p>
-        <div class="size-warning-actions">
-          <button type="button" id="use-recommended-size" class="btn">
-            Use Recommended Size
-          </button>
-          <button type="button" id="keep-selected-size" class="btn btn-outline">
-            Keep Selected Size
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ORDER SUCCESS POPUP -->
-    <div id="order-success-modal" class="rk-overlay">
-      <div class="rk-popup order-success-popup">
-        <div class="success-check">
-          <svg viewBox="0 0 52 52" aria-hidden="true">
-            <circle cx="26" cy="26" r="24"></circle>
-            <path d="M14 27l8 8 16-18"></path>
-          </svg>
-        </div>
-        <h2>Order Done!</h2>
-        <p class="success-main">Your order has been received successfully.</p>
-        <p class="success-sub">Please wait for confirmation from RK Frames.</p>
-        <div class="success-loader"><span></span></div>
-        <button type="button" id="close-order-success" class="btn">Done</button>
-      </div>
-    </div>
-    <script src="script.js"></script>
-  </body>
-</html>
+
+      if (!alreadyBest && selectedDiff > THRESHOLD) {
+        showSizeWarning(bestSizes);
+      }
+    }
+    function drawPreview() {
+      const width = selectedSize.w * PX_PER_CM;
+      const height = selectedSize.h * PX_PER_CM;
+      canvas.width = width;
+      canvas.height = height;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // outer frame with a subtle drop shadow
+      ctx.save();
+      ctx.shadowColor = "rgba(0,0,0,0.25)";
+      ctx.shadowBlur = 30;
+      ctx.shadowOffsetY = 12;
+      ctx.fillStyle = selectedColor;
+      ctx.fillRect(0, 0, width, height);
+      ctx.restore();
+
+      // bevel line
+      ctx.strokeStyle = "rgba(0,0,0,0.25)";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(
+        frameWidth * 0.4,
+        frameWidth * 0.4,
+        width - frameWidth * 0.8,
+        height - frameWidth * 0.8,
+      );
+
+      // mat board
+      const matX = frameWidth;
+      const matY = frameWidth;
+      const matW = width - frameWidth * 2;
+      const matH = height - frameWidth * 2;
+      ctx.fillStyle = selectedMat;
+      ctx.fillRect(matX, matY, matW, matH);
+
+      // photo opening
+      const openX = matX + matWidth;
+      const openY = matY + matWidth;
+      const openW = matW - matWidth * 2;
+      const openH = matH - matWidth * 2;
+
+      if (openW <= 0 || openH <= 0) return; // frame/mat too thick for this canvas size
+
+      ctx.save();
+      ctx.shadowColor = "rgba(0,0,0,0.35)";
+      ctx.shadowBlur = 10;
+      ctx.fillStyle = "#000";
+      ctx.fillRect(openX, openY, openW, openH);
+      ctx.restore();
+
+      if (uploadedImage) {
+        const targetRatio = openW / openH;
+        const imgRatio = uploadedImage.width / uploadedImage.height;
+        let sx, sy, sw, sh;
+        if (imgRatio > targetRatio) {
+          sh = uploadedImage.height;
+          sw = sh * targetRatio;
+          sx = (uploadedImage.width - sw) / 2;
+          sy = 0;
+        } else {
+          sw = uploadedImage.width;
+          sh = sw / targetRatio;
+          sx = 0;
+          sy = (uploadedImage.height - sh) / 2;
+        }
+        ctx.drawImage(
+          uploadedImage,
+          sx,
+          sy,
+          sw,
+          sh,
+          openX,
+          openY,
+          openW,
+          openH,
+        );
+      } else {
+        ctx.fillStyle = "#888";
+        ctx.font = "16px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(
+          "Upload a photo to preview it here",
+          openX + openW / 2,
+          openY + openH / 2,
+        );
+      }
+    }
+    downloadBtn.addEventListener("click", () => {
+      const link = document.createElement("a");
+      link.download = `rk-frames-preview-${selectedSize.w}x${selectedSize.h}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
+
+    /* initial render */
+    drawPreview();
+
+    // EmailJS settings.
+
+    const EMAILJS_SERVICE_ID = "service_3knosym";
+    const EMAILJS_TEMPLATE_ID = "template_b0tiy9h";
+
+    const RK_CART_KEY = "rk-frames-cart";
+
+    const rkMessageModal = document.getElementById("rk-message-modal");
+    const rkMessageText = document.getElementById("rk-message-text");
+    const rkMessageTitle = document.getElementById("rk-message-title");
+
+    function rkShowPopup(message, title = "Notice") {
+      if (!rkMessageModal || !rkMessageText) {
+        console.error(message);
+        return;
+      }
+
+      if (rkMessageTitle) rkMessageTitle.textContent = title;
+      rkMessageText.innerHTML = message;
+      rkMessageModal.classList.add("open");
+    }
+
+    function rkClosePopup() {
+      rkMessageModal?.classList.remove("open");
+    }
+
+    // Alias used by the size-fit check.
+    function showRKPopup(message) {
+      rkShowPopup(message, "Size Notice");
+    }
+
+    document
+      .getElementById("close-rk-message")
+      ?.addEventListener("click", rkClosePopup);
+    document
+      .getElementById("rk-message-ok")
+      ?.addEventListener("click", rkClosePopup);
+
+    rkMessageModal?.addEventListener("click", (event) => {
+      if (event.target === rkMessageModal) rkClosePopup();
+    });
+
+    let recommendedSize = null;
+    const sizeWarningModal = document.getElementById("size-warning-modal");
+    const sizeWarningText = document.getElementById("size-warning-text");
+    const useRecommendedSizeBtn = document.getElementById(
+      "use-recommended-size",
+    );
+    const keepSelectedSizeBtn = document.getElementById("keep-selected-size");
+    const closeSizeWarningBtn = document.getElementById("close-size-warning");
+
+    function showSizeWarning(bestSizes) {
+      if (!sizeWarningModal || !sizeWarningText) return;
+
+      recommendedSize = bestSizes[0];
+      const bestLabel = bestSizes.map((size) => size.label).join(" or ");
+      const selectedLabel =
+        selectedSize.label || `${selectedSize.w}×${selectedSize.h}cm`;
+
+      sizeWarningText.innerHTML =
+        `This photo may require significant cropping in <strong>${rkEscapeHTML(selectedLabel)}</strong>.<br><br>` +
+        `Recommended size: <strong>${rkEscapeHTML(bestLabel)}</strong>`;
+
+      sizeWarningModal.classList.add("open");
+    }
+
+    function closeSizeWarning() {
+      sizeWarningModal?.classList.remove("open");
+    }
+
+    closeSizeWarningBtn?.addEventListener("click", closeSizeWarning);
+    keepSelectedSizeBtn?.addEventListener("click", closeSizeWarning);
+
+    useRecommendedSizeBtn?.addEventListener("click", () => {
+      if (!recommendedSize) return;
+
+      selectedSize = recommendedSize;
+
+      document.querySelectorAll(".size-btn").forEach((btn) => {
+        const matches =
+          Number(btn.dataset.w) === recommendedSize.w &&
+          Number(btn.dataset.h) === recommendedSize.h;
+        btn.classList.toggle("active", matches);
+      });
+
+      closeSizeWarning();
+      drawPreview();
+    });
+
+    sizeWarningModal?.addEventListener("click", (event) => {
+      if (event.target === sizeWarningModal) closeSizeWarning();
+    });
+
+    function rkProductImage(id) {
+      const card = document.querySelector(
+        `.product-card[data-id="${CSS.escape(id)}"]`,
+      );
+      return card?.querySelector("img.poster")?.getAttribute("src") || "";
+    }
+
+    // Load saved cart safely
+    function loadRKCart() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(RK_CART_KEY) || "[]");
+        return Array.isArray(saved)
+          ? saved
+              .filter(
+                (item) =>
+                  item &&
+                  typeof item.id === "string" &&
+                  typeof item.name === "string" &&
+                  Number.isFinite(Number(item.price)) &&
+                  Number(item.price) >= 0 &&
+                  Number.isInteger(Number(item.quantity)) &&
+                  Number(item.quantity) > 0,
+              )
+              .map((item) => ({
+                ...item,
+                image: item.image || rkProductImage(item.id),
+                price: Number(item.price),
+                quantity: Number(item.quantity),
+              }))
+          : [];
+      } catch {
+        return [];
+      }
+    }
+
+    let rkCart = loadRKCart();
+
+    // Elements
+    const rkCartModal = document.getElementById("cart-modal");
+    const rkCheckoutModal = document.getElementById("checkout-modal");
+    const rkCartItems = document.getElementById("cart-items");
+    const rkCartCount = document.getElementById("cart-count");
+    const rkSubtotal = document.getElementById("cart-subtotal");
+    const rkTotal = document.getElementById("cart-total");
+    const rkCheckoutItems = document.getElementById("checkout-items");
+    const rkCheckoutTotal = document.getElementById("checkout-total");
+    const rkCheckoutForm = document.getElementById("checkout-form");
+
+    document
+      .getElementById("close-order-success")
+      ?.addEventListener("click", () => {
+        document
+          .getElementById("order-success-modal")
+          ?.classList.remove("open");
+      });
+
+    document
+      .getElementById("order-success-modal")
+      ?.addEventListener("click", (event) => {
+        if (event.target.id === "order-success-modal") {
+          event.currentTarget.classList.remove("open");
+        }
+      });
+
+    // Currency formatter
+    function rkMoney(amount) {
+      return `${Number(amount).toLocaleString("en-EG")} LE`;
+    }
+
+    // Calculate cart totals
+    function rkCartSubtotal() {
+      return rkCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    }
+
+    function rkSaveCart() {
+      try {
+        localStorage.setItem(RK_CART_KEY, JSON.stringify(rkCart));
+      } catch (error) {
+        console.warn("Could not save cart:", error);
+      }
+      rkRenderCart();
+    }
+
+    // Create elements safely
+    function rkElement(tag, className, text) {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      if (text !== undefined) element.textContent = text;
+      return element;
+    }
+
+    /* ---------------- PRODUCT OPTIONS + ADD TO CART ---------------- */
+    const productCardsForOptions = document.querySelectorAll(".product-card");
+
+    productCardsForOptions.forEach((card) => {
+      const sizeSelect = card.querySelector(".product-size");
+      const colorButtons = card.querySelectorAll(".product-color");
+      const priceEl = card.querySelector(".product-price");
+
+      function updateProductPrice() {
+        if (!sizeSelect || !priceEl) return;
+        const option = sizeSelect.options[sizeSelect.selectedIndex];
+        const price = Number(option?.dataset.price || card.dataset.price || 0);
+        priceEl.textContent = rkMoney(price);
+      }
+
+      sizeSelect?.addEventListener("change", updateProductPrice);
+
+      colorButtons.forEach((colorButton) => {
+        colorButton.addEventListener("click", () => {
+          colorButtons.forEach((button) => button.classList.remove("active"));
+          colorButton.classList.add("active");
+        });
+      });
+
+      updateProductPrice();
+    });
+
+    document
+      .querySelectorAll(".product-card .add-to-cart")
+      .forEach((button) => {
+        button.addEventListener("click", () => {
+          const card = button.closest(".product-card");
+          if (!card) return;
+
+          const baseId = card.dataset.id;
+          const baseName =
+            card.dataset.name || card.querySelector("h3")?.textContent.trim();
+          const category = card.dataset.category || "";
+          const image =
+            card.querySelector("img.poster")?.getAttribute("src") || "";
+          const sizeSelect = card.querySelector(".product-size");
+          const selectedOption = sizeSelect?.options[sizeSelect.selectedIndex];
+          const size = selectedOption?.value || "20×30cm";
+          const price = Number(
+            selectedOption?.dataset.price || card.dataset.price || 350,
+          );
+          const activeColor = card.querySelector(
+            ".product-color.active",
+          );
+          const color = activeColor?.dataset.color || "Black Wood";
+
+          if (!baseId || !baseName || !Number.isFinite(price)) {
+            rkShowPopup(
+              "This product is missing its ID, name or valid price.",
+              "Product Error",
+            );
+            return;
+          }
+
+          const id = `${baseId}__${size}__${color}`;
+          const name = `${baseName} — ${size} — ${color}`;
+          const existing = rkCart.find((item) => item.id === id);
+
+          if (existing) {
+            existing.quantity += 1;
+          } else {
+            rkCart.push({
+              id,
+              baseId,
+              name,
+              price,
+              category,
+              image,
+              size,
+              color,
+              quantity: 1,
+            });
+          }
+
+          rkSaveCart();
+
+          const originalText = button.textContent;
+          button.textContent = "Added ✓";
+          button.disabled = true;
+
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.disabled = false;
+          }, 900);
+        });
+      });
+
+    function rkRenderCart() {
+      const totalQuantity = rkCart.reduce(
+        (sum, item) => sum + item.quantity,
+        0,
+      );
+
+      const subtotal = rkCartSubtotal();
+
+      rkCartCount.textContent = totalQuantity;
+      rkSubtotal.textContent = rkMoney(subtotal);
+      rkTotal.textContent = rkMoney(subtotal);
+
+      rkCartItems.replaceChildren();
+
+      if (rkCart.length === 0) {
+        const empty = rkElement(
+          "p",
+          "empty-cart",
+          "Your cart is empty. Browse our posters and add your favorites!",
+        );
+        rkCartItems.appendChild(empty);
+        return;
+      }
+
+      rkCart.forEach((item) => {
+        const row = rkElement("div", "cart-item");
+        const imageWrap = rkElement("div", "cart-item-image");
+        const details = rkElement("div", "cart-item-details");
+
+        if (item.image) {
+          const image = document.createElement("img");
+          image.src = item.image;
+          image.alt = item.name;
+          image.loading = "lazy";
+          imageWrap.appendChild(image);
+        }
+
+        const name = rkElement("strong", "", item.name);
+        const unitPrice = rkElement("p", "", `${rkMoney(item.price)} each`);
+        const quantityControls = rkElement("div", "cart-quantity");
+
+        const decrease = rkElement("button", "", "−");
+        decrease.type = "button";
+        decrease.setAttribute("aria-label", `Decrease ${item.name}`);
+
+        const quantity = rkElement("span", "", String(item.quantity));
+        quantity.setAttribute("aria-live", "polite");
+
+        const increase = rkElement("button", "", "+");
+        increase.type = "button";
+        increase.setAttribute("aria-label", `Increase ${item.name}`);
+
+        const lineTotal = rkElement(
+          "p",
+          "cart-line-total",
+          `Item total: ${rkMoney(item.price * item.quantity)}`,
+        );
+
+        const remove = rkElement("button", "remove-item", "Remove");
+        remove.type = "button";
+
+        decrease.addEventListener("click", () => {
+          item.quantity -= 1;
+          if (item.quantity <= 0) {
+            rkCart = rkCart.filter((product) => product.id !== item.id);
+          }
+          rkSaveCart();
+        });
+
+        increase.addEventListener("click", () => {
+          item.quantity += 1;
+          rkSaveCart();
+        });
+
+        remove.addEventListener("click", () => {
+          rkCart = rkCart.filter((product) => product.id !== item.id);
+          rkSaveCart();
+        });
+
+        quantityControls.append(decrease, quantity, increase);
+        details.append(name, unitPrice, quantityControls, lineTotal, remove);
+        row.append(imageWrap, details);
+        rkCartItems.appendChild(row);
+      });
+    }
+
+    document.getElementById("cart-toggle").addEventListener("click", () => {
+      rkRenderCart();
+      rkCartModal.classList.add("open");
+    });
+
+    document.getElementById("close-cart").addEventListener("click", () => {
+      rkCartModal.classList.remove("open");
+    });
+
+    function rkRenderCheckout() {
+      rkCheckoutItems.replaceChildren();
+
+      rkCart.forEach((item) => {
+        const row = rkElement("div", "checkout-item");
+        const imageWrap = rkElement("div", "checkout-item-image");
+        const info = rkElement("div", "checkout-item-info");
+
+        if (item.image) {
+          const image = document.createElement("img");
+          image.src = item.image;
+          image.alt = item.name;
+          image.loading = "lazy";
+          imageWrap.appendChild(image);
+        }
+
+        const product = rkElement(
+          "span",
+          "checkout-item-name",
+          `${item.name} × ${item.quantity}`,
+        );
+        const price = rkElement(
+          "strong",
+          "",
+          rkMoney(item.price * item.quantity),
+        );
+
+        info.append(product, price);
+        row.append(imageWrap, info);
+        rkCheckoutItems.appendChild(row);
+      });
+
+      rkCheckoutTotal.textContent = rkMoney(rkCartSubtotal());
+    }
+
+    document.getElementById("checkout-btn").addEventListener("click", () => {
+      if (rkCart.length === 0) {
+        rkShowPopup("Your cart is empty.", "Your Cart");
+        return;
+      }
+
+      rkRenderCheckout();
+      rkCartModal.classList.remove("open");
+      rkCheckoutModal.classList.add("open");
+    });
+
+    document.getElementById("close-checkout").addEventListener("click", () => {
+      rkCheckoutModal.classList.remove("open");
+    });
+
+    document.getElementById("back-to-cart").addEventListener("click", () => {
+      rkCheckoutModal.classList.remove("open");
+      rkCartModal.classList.add("open");
+    });
+
+    function rkEscapeHTML(value) {
+      return String(value).replace(
+        /[&<>"']/g,
+        (char) =>
+          ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+          })[char],
+      );
+    }
+
+    rkCheckoutForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      if (rkCart.length === 0) {
+        rkCheckoutModal.classList.remove("open");
+        rkShowPopup("Your cart is empty.", "Your Cart");
+        return;
+      }
+
+      const name = document.getElementById("customer-name")?.value.trim() || "";
+      const phone =
+        document.getElementById("customer-phone")?.value.trim() || "";
+      const address =
+        document.getElementById("customer-address")?.value.trim() || "";
+      const notes =
+        document.getElementById("customer-notes")?.value.trim() || "";
+
+      if (!name || !phone || !address) {
+        rkShowPopup(
+          "Please fill in all required delivery details.",
+          "Missing Details",
+        );
+        return;
+      }
+
+      if (!window.emailjs) {
+        rkShowPopup(
+          "Email service is not loaded. Please check your internet connection and try again.",
+          "Email Error",
+        );
+        return;
+      }
+
+      if (
+        EMAILJS_SERVICE_ID === "YOUR_EMAILJS_SERVICE_ID" ||
+        EMAILJS_TEMPLATE_ID === "YOUR_EMAILJS_TEMPLATE_ID"
+      ) {
+        rkShowPopup(
+          "EmailJS is not configured yet. Add your Service ID and Template ID to <strong>script.js</strong> first.",
+          "EmailJS Setup Required",
+        );
+        return;
+      }
+
+      const placeOrderBtn = document.getElementById("place-order-btn");
+      const originalButtonText = placeOrderBtn?.textContent || "Place Order";
+
+      if (placeOrderBtn) {
+        placeOrderBtn.disabled = true;
+        placeOrderBtn.textContent = "Sending Order...";
+      }
+
+      const order = {
+        id: "RK-" + Date.now().toString().slice(-8),
+        date: new Date().toLocaleString("en-EG"),
+        name,
+        phone,
+        address,
+        notes,
+        items: rkCart.map((item) => ({ ...item })),
+        total: rkCartSubtotal(),
+      };
+
+      const orderItems = order.items
+        .map((item, index) => {
+          const imageURL = item.image
+            ? new URL(item.image, window.location.href).href
+            : "";
+
+          return [
+            `${index + 1}. ${item.name}`,
+            `   Quantity: ${item.quantity}`,
+            `   Unit Price: ${rkMoney(item.price)}`,
+            `   Subtotal: ${rkMoney(item.price * item.quantity)}`,
+            imageURL ? `   Poster: ${imageURL}` : "",
+          ]
+            .filter(Boolean)
+            .join("\n");
+        })
+        .join("\n\n");
+
+      // Build email items with an image CID for every unique product in the order.
+      // EmailJS will attach these images and they can also be displayed directly
+      // inside the email using <img src="cid:product_image_0">, etc.
+      const MAX_EMAIL_IMAGES = 10;
+      const emailItems = order.items.slice(0, MAX_EMAIL_IMAGES).map((item, index) => ({
+        name: item.name,
+        units: item.quantity || item.units || 1,
+        price: `${Number(item.price || 0).toFixed(2)} EGP`,
+        image_url: item.image ? `cid:product_image_${index}` : "",
+      }));
+
+      const templateParams = {
+        order_id: order.id,
+        order_date: order.date,
+        customer_name: order.name,
+        customer_phone: order.phone,
+        customer_address: order.address,
+        customer_notes: order.notes || "No additional notes",
+        orders: emailItems,
+        total: `${Number(order.total || 0).toFixed(2)} EGP`,
+      };
+
+      // Add every product/custom-frame image as a separate EmailJS attachment
+      // variable. The EmailJS template must have matching Variable Attachments
+      // named product_image_0 through product_image_9.
+      order.items.slice(0, MAX_EMAIL_IMAGES).forEach((item, index) => {
+        if (item.image) {
+          templateParams[`product_image_${index}`] = item.image;
+        }
+      });
+
+      try {
+        // Wait for EmailJS to actually send the order before confirming it.
+        const response = await emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID,
+          templateParams
+        );
+
+        console.log("Order email sent:", response.status, response.text);
+
+        // No client-side PDF/receipt window.
+        rkCheckoutModal.classList.remove("open");
+        rkCart = [];
+        rkSaveCart();
+        rkCheckoutForm.reset();
+
+        const successModal = document.getElementById("order-success-modal");
+        successModal?.classList.add("open");
+      } catch (error) {
+        console.error("EmailJS order failed:", error);
+
+        const errorMessage =
+          error?.text ||
+          error?.message ||
+          "The order could not be sent. Please try again.";
+
+        rkShowPopup(
+          `<strong>Order could not be sent.</strong><br><br>${rkEscapeHTML(errorMessage)}`,
+          "Order Error",
+        );
+      } finally {
+        if (placeOrderBtn) {
+          placeOrderBtn.disabled = false;
+          placeOrderBtn.textContent = originalButtonText;
+        }
+      }
+    });
+
+    [rkCartModal, rkCheckoutModal].forEach((modal) => {
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          modal.classList.remove("open");
+        }
+      });
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        rkCartModal.classList.remove("open");
+        rkCheckoutModal.classList.remove("open");
+        rkMessageModal?.classList.remove("open");
+        document.getElementById("size-warning-modal")?.classList.remove("open");
+        document
+          .getElementById("order-success-modal")
+          ?.classList.remove("open");
+      }
+    });
+
+    /* ---------------- CUSTOM FRAME ORDER ---------------- */
+    const customOrderBtn = document.getElementById("custom-add-to-cart-btn");
+
+    customOrderBtn?.addEventListener("click", () => {
+      if (!uploadedImage) {
+        rkShowPopup("Please upload a photo first.", "Custom Frame");
+        return;
+      }
+
+      const sizeLabel = selectedSize.label || `${selectedSize.w}×${selectedSize.h}cm`;
+      const colorName = selectedColor === "#ffffff" ? "Classic White" : "Black Wood";
+      const priceMap = {
+        "20×30cm": 350,
+        "30×40cm": 450,
+        "40×60cm": 600,
+      };
+      const price = priceMap[sizeLabel] || 350;
+      const id = `custom-frame__${sizeLabel}__${colorName}`;
+
+      const existing = rkCart.find((item) => item.id === id);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        rkCart.push({
+          id,
+          name: `Custom Photo Frame — ${sizeLabel} — ${colorName}`,
+          price,
+          category: "Custom-Design",
+          image: canvas.toDataURL("image/jpeg", 0.72),
+          size: sizeLabel,
+          color: colorName,
+          custom: true,
+          quantity: 1,
+        });
+      }
+
+      rkSaveCart();
+      rkRenderCheckout();
+      rkCartModal.classList.remove("open");
+      rkCheckoutModal.classList.add("open");
+    });
+
+    // Initial render
+    rkRenderCart();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initRKFrames, { once: true });
+  } else {
+    initRKFrames();
+  }
+})();
