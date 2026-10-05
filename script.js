@@ -85,9 +85,7 @@
           checkSizeFit();
           drawPreview();
           downloadBtn.disabled = false;
-          const customOrderBtn = document.getElementById(
-            "custom-add-to-cart-btn",
-          );
+          const customOrderBtn = document.getElementById("custom-add-to-cart-btn");
           if (customOrderBtn) customOrderBtn.disabled = false;
         };
         img.src = ev.target.result;
@@ -226,11 +224,10 @@
     /* initial render */
     drawPreview();
 
-    /* ---------------- WHATSAPP SETTINGS ---------------- */
-    // Your WhatsApp number in international format: country code + number,
-    // digits only, no "+" and no leading zeros.
-    // Example (Egypt): 01012345678  ->  "201012345678"
-    const WHATSAPP_NUMBER = "201044310426";
+    // EmailJS settings.
+
+    const EMAILJS_SERVICE_ID = "service_3knosym";
+    const EMAILJS_TEMPLATE_ID = "template_b0tiy9h";
 
     const RK_CART_KEY = "rk-frames-cart";
 
@@ -321,9 +318,8 @@
     });
 
     function rkProductImage(id) {
-      const baseId = String(id).split("__")[0];
       const card = document.querySelector(
-        `.product-card[data-id="${CSS.escape(baseId)}"]`,
+        `.product-card[data-id="${CSS.escape(id)}"]`,
       );
       return card?.querySelector("img.poster")?.getAttribute("src") || "";
     }
@@ -458,7 +454,9 @@
           const price = Number(
             selectedOption?.dataset.price || card.dataset.price || 350,
           );
-          const activeColor = card.querySelector(".product-color.active");
+          const activeColor = card.querySelector(
+            ".product-color.active",
+          );
           const color = activeColor?.dataset.color || "Black Wood";
 
           if (!baseId || !baseName || !Number.isFinite(price)) {
@@ -666,40 +664,7 @@
       );
     }
 
-    // Build the checkout message that is sent to the shop's WhatsApp.
-    function rkBuildOrderMessage(order) {
-      const lines = order.items.map((item, index) => {
-        const parts = [
-          `${index + 1}. ${item.name}`,
-          `   Qty: ${item.quantity} × ${rkMoney(item.price)} = ${rkMoney(item.price * item.quantity)}`,
-        ];
-        if (item.custom) {
-          parts.push("   (Custom photo – I will send the photo in this chat)");
-        }
-        return parts.join("\n");
-      });
-
-      return [
-        "*New Order - RK Frames*",
-        `Order ID: ${order.id}`,
-        `Date: ${order.date}`,
-        "",
-        "*Customer*",
-        `Name: ${order.name}`,
-        `Phone: ${order.phone}`,
-        `Address: ${order.address}`,
-        order.notes ? `Notes: ${order.notes}` : "",
-        "",
-        "*Items*",
-        lines.join("\n\n"),
-        "",
-        `*Total: ${rkMoney(order.total)}* (delivery not included)`,
-      ]
-        .filter((line, i, arr) => !(line === "" && arr[i - 1] === ""))
-        .join("\n");
-    }
-
-    rkCheckoutForm.addEventListener("submit", (event) => {
+    rkCheckoutForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
       if (rkCart.length === 0) {
@@ -724,12 +689,31 @@
         return;
       }
 
-      if (!/^\d{6,15}$/.test(WHATSAPP_NUMBER)) {
+      if (!window.emailjs) {
         rkShowPopup(
-          "WhatsApp number is not set yet. Add your number to <strong>WHATSAPP_NUMBER</strong> in <strong>script.js</strong> (digits only, with country code).",
-          "Setup Required",
+          "Email service is not loaded. Please check your internet connection and try again.",
+          "Email Error",
         );
         return;
+      }
+
+      if (
+        EMAILJS_SERVICE_ID === "YOUR_EMAILJS_SERVICE_ID" ||
+        EMAILJS_TEMPLATE_ID === "YOUR_EMAILJS_TEMPLATE_ID"
+      ) {
+        rkShowPopup(
+          "EmailJS is not configured yet. Add your Service ID and Template ID to <strong>script.js</strong> first.",
+          "EmailJS Setup Required",
+        );
+        return;
+      }
+
+      const placeOrderBtn = document.getElementById("place-order-btn");
+      const originalButtonText = placeOrderBtn?.textContent || "Place Order";
+
+      if (placeOrderBtn) {
+        placeOrderBtn.disabled = true;
+        placeOrderBtn.textContent = "Sending Order...";
       }
 
       const order = {
@@ -743,22 +727,91 @@
         total: rkCartSubtotal(),
       };
 
-      const message = rkBuildOrderMessage(order);
-      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      const orderItems = order.items
+        .map((item, index) => {
+          const imageURL = item.image
+            ? new URL(item.image, window.location.href).href
+            : "";
 
-      // Open WhatsApp with the order message ready to send.
-      const opened = window.open(url, "_blank");
-      if (!opened) {
-        // Popup blocked – fall back to opening in the same tab.
-        window.location.href = url;
+          return [
+            `${index + 1}. ${item.name}`,
+            `   Quantity: ${item.quantity}`,
+            `   Unit Price: ${rkMoney(item.price)}`,
+            `   Subtotal: ${rkMoney(item.price * item.quantity)}`,
+            imageURL ? `   Poster: ${imageURL}` : "",
+          ]
+            .filter(Boolean)
+            .join("\n");
+        })
+        .join("\n\n");
+
+      // Build email items with an image CID for every unique product in the order.
+      // EmailJS will attach these images and they can also be displayed directly
+      // inside the email using <img src="cid:product_image_0">, etc.
+      const MAX_EMAIL_IMAGES = 10;
+      const emailItems = order.items.slice(0, MAX_EMAIL_IMAGES).map((item, index) => ({
+        name: item.name,
+        units: item.quantity || item.units || 1,
+        price: `${Number(item.price || 0).toFixed(2)} EGP`,
+        image_url: item.image ? `cid:product_image_${index}` : "",
+      }));
+
+      const templateParams = {
+        order_id: order.id,
+        order_date: order.date,
+        customer_name: order.name,
+        customer_phone: order.phone,
+        customer_address: order.address,
+        customer_notes: order.notes || "No additional notes",
+        orders: emailItems,
+        total: `${Number(order.total || 0).toFixed(2)} EGP`,
+      };
+
+      // Add every product/custom-frame image as a separate EmailJS attachment
+      // variable. The EmailJS template must have matching Variable Attachments
+      // named product_image_0 through product_image_9.
+      order.items.slice(0, MAX_EMAIL_IMAGES).forEach((item, index) => {
+        if (item.image) {
+          templateParams[`product_image_${index}`] = item.image;
+        }
+      });
+
+      try {
+        // Wait for EmailJS to actually send the order before confirming it.
+        const response = await emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID,
+          templateParams
+        );
+
+        console.log("Order email sent:", response.status, response.text);
+
+        // No client-side PDF/receipt window.
+        rkCheckoutModal.classList.remove("open");
+        rkCart = [];
+        rkSaveCart();
+        rkCheckoutForm.reset();
+
+        const successModal = document.getElementById("order-success-modal");
+        successModal?.classList.add("open");
+      } catch (error) {
+        console.error("EmailJS order failed:", error);
+
+        const errorMessage =
+          error?.text ||
+          error?.message ||
+          "The order could not be sent. Please try again.";
+
+        rkShowPopup(
+          `<strong>Order could not be sent.</strong><br><br>${rkEscapeHTML(errorMessage)}`,
+          "Order Error",
+        );
+      } finally {
+        if (placeOrderBtn) {
+          placeOrderBtn.disabled = false;
+          placeOrderBtn.textContent = originalButtonText;
+        }
       }
-
-      rkCheckoutModal.classList.remove("open");
-      rkCart = [];
-      rkSaveCart();
-      rkCheckoutForm.reset();
-
-      document.getElementById("order-success-modal")?.classList.add("open");
     });
 
     [rkCartModal, rkCheckoutModal].forEach((modal) => {
@@ -790,10 +843,8 @@
         return;
       }
 
-      const sizeLabel =
-        selectedSize.label || `${selectedSize.w}×${selectedSize.h}cm`;
-      const colorName =
-        selectedColor === "#ffffff" ? "Classic White" : "Black Wood";
+      const sizeLabel = selectedSize.label || `${selectedSize.w}×${selectedSize.h}cm`;
+      const colorName = selectedColor === "#ffffff" ? "Classic White" : "Black Wood";
       const priceMap = {
         "20×30cm": 350,
         "30×40cm": 450,
